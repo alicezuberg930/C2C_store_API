@@ -6,6 +6,9 @@ import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { hashPassword } from 'src/common/utils';
 import aqp from 'api-query-params';
+import { RegisterDto } from '../auth/dto/create-auth.dto';
+import { v4 } from 'uuid';
+import dayjs from 'dayjs';
 
 @Injectable()
 export class UsersService {
@@ -40,8 +43,7 @@ export class UsersService {
     const totalPages = Math.ceil(totalRows / pageSize)
     const skip = (page - 1) * pageSize
 
-    const results = await this.userModel.find({}).limit(pageSize).skip(skip).sort(sort as any)
-    // .select("-password")
+    const results = await this.userModel.find({}).limit(pageSize).skip(skip).sort(sort as any).select("-password")
     return { results, totalPages }
   }
 
@@ -64,4 +66,20 @@ export class UsersService {
   async findUserByIdentifier(id: string) {
     return await this.userModel.findOne({ email: id })
   }
+
+  async register(registerDto: RegisterDto) {
+    const { name, email, password } = registerDto
+    if (await this.isEmailExist(email)) {
+      throw new BadRequestException(["Email đã tồn tại"])
+    }
+    const hashedPassword = await hashPassword(password)
+    const user = await this.userModel.create({
+      name, email, password: hashedPassword,
+      codeId: v4(), codeExpired: dayjs().add(30, 'minutes')
+    })
+
+    return user;
+  }
+
+
 }

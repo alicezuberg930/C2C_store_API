@@ -1,7 +1,6 @@
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Exclude } from 'class-transformer';
-import { HydratedDocument } from 'mongoose';
+import { Date, HydratedDocument } from 'mongoose';
 
 export type CatDocument = HydratedDocument<User>;
 
@@ -28,8 +27,14 @@ export class User {
     @Prop({ default: "LOCAL" })
     accountType: string
 
-    @Prop()
+    @Prop({ default: false })
     isEmailVerified: boolean
+
+    @Prop()
+    codeId: string
+
+    @Prop()
+    codeExpired: number
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
