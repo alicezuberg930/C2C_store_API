@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './schemas/user.schema';
-import { Model } from 'mongoose';
+import mongoose, { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { hashPassword } from 'src/common/utils';
 import aqp from 'api-query-params';
@@ -40,7 +40,8 @@ export class UsersService {
     const totalPages = Math.ceil(totalRows / pageSize)
     const skip = (page - 1) * pageSize
 
-    const results = await this.userModel.find({}).limit(pageSize).skip(skip).sort(sort as any).select("-password")
+    const results = await this.userModel.find({}).limit(pageSize).skip(skip).sort(sort as any)
+    // .select("-password")
     return { results, totalPages }
   }
 
@@ -48,11 +49,19 @@ export class UsersService {
     return `This action returns a #${id} user`;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    return await this.userModel.updateOne({ _id: id }, { ...updateUserDto })
   }
 
   delete(id: number) {
-    return `This action removes a #${id} user`;
+    if (mongoose.isValidObjectId(id)) {
+      return this.userModel.deleteOne({ _id: id })
+    } else {
+      throw new BadRequestException(["ID sai định dạng"])
+    }
+  }
+
+  async findUserByIdentifier(id: string) {
+    return await this.userModel.findOne({ email: id })
   }
 }

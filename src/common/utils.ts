@@ -8,4 +8,10 @@ export const hashPassword = async (password: string) => {
     }
 }
 
-
+export const comparePassword = async (password: string, hashedPassword: string) => {
+    try {
+        return await bcrypt.compare(password, hashedPassword);
+    } catch (error) {
+        return false;
+    }
+}

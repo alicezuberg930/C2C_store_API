@@ -7,7 +7,6 @@ export class CreateUserDto {
     @IsEmail({}, { message: "Email sai định dạng" })
     email: string;
 
-    // @Max(20)
     @IsNotEmpty()
     password: string;
 

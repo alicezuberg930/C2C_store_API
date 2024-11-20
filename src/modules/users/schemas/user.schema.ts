@@ -1,5 +1,6 @@
 
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { Exclude } from 'class-transformer';
 import { HydratedDocument } from 'mongoose';
 
 export type CatDocument = HydratedDocument<User>;

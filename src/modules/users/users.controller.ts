@@ -13,8 +13,8 @@ export class UsersController {
   }
 
   @Get()
-  get(@Query() query: string, @Query("page") page: number, @Query("pageSize") pageSize: number) {
-    return this.usersService.get(query, page, pageSize);
+  get(@Query() query: string, @Query("page") page: string, @Query("pageSize") pageSize: string) {
+    return this.usersService.get(query, +page, +pageSize);
   }
 
   @Get(':id')
@@ -24,7 +24,7 @@ export class UsersController {
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+    return this.usersService.update(id, updateUserDto);
   }
 
   @Delete(':id')
