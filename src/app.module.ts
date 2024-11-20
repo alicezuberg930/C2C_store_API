@@ -7,6 +7,8 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/passport/jwt-auth.guard';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
   imports: [
@@ -20,6 +22,31 @@ import { JwtAuthGuard } from './modules/auth/passport/jwt-auth.guard';
       }),
       inject: [ConfigService],
     }),
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        transport: {
+          host: 'smtp.gmail.com',
+          port: 465,
+          secure: true,
+          auth: {
+            user: configService.get<string>('MAIL_USERNAME'),
+            pass: configService.get<string>('MAIL_PASSWORD'),
+          },
+        },
+        defaults: {
+          from: '"No Reply" <no-reply@localhost>',
+        },
+        // template: {
+        //   dir: process.cwd() + '/template/',
+        //   adapter: new HandlebarsAdapter(),
+        //   options: {
+        //     strict: true,
+        //   }
+        // },
+      }),
+      inject: [ConfigService],
+    })
   ],
   controllers: [AppController],
   providers: [
