@@ -9,10 +9,11 @@ import aqp from 'api-query-params';
 import { RegisterDto } from '../auth/dto/create-auth.dto';
 import { v4 } from 'uuid';
 import dayjs from 'dayjs';
+import { MailerService } from '@nestjs-modules/mailer';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) { }
+  constructor(@InjectModel(User.name) private userModel: Model<User>, private mailerService: MailerService) { }
 
   async isEmailExist(email: string) {
     const isExist = await this.userModel.exists({ email })
@@ -75,11 +76,25 @@ export class UsersService {
     const hashedPassword = await hashPassword(password)
     const user = await this.userModel.create({
       name, email, password: hashedPassword,
-      codeId: v4(), codeExpired: dayjs().add(30, 'minutes')
+      codeId: v4(), codeExpired: dayjs().add(5, 'minutes')
     })
-
+    await this.sendMail(user)
     return user;
   }
 
-
+  async sendMail(user: mongoose.Document<unknown, {}, User> & User) {
+    try {
+      const mail = await this.mailerService.sendMail({
+        to: user.email,
+        subject: "Activate your account",
+        template: "register",
+        context: {
+          name: user?.name ?? user?.email,
+          activationCode: user.codeId
+        }
+      })
+    } catch (error) {
+      return { error }
+    }
+  }
 }

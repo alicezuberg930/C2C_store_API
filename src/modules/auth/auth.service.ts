@@ -1,18 +1,21 @@
 
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { comparePassword } from 'src/common/utils';
 import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/create-auth.dto';
+import mongoose from 'mongoose';
+import { User } from '../users/schemas/user.schema';
 
 @Injectable()
 export class AuthService {
   constructor(private usersService: UsersService, private jwtService: JwtService) { }
 
-  async validateUser(identifier: string, pass: string): Promise<any> {
+  async validateUser(identifier: string, pass: string): Promise<mongoose.Document<unknown, {}, User> & User> {
     const user = await this.usersService.findUserByIdentifier(identifier);
+    if (!user) return null
     const checkPassword = await comparePassword(pass, user.password)
-    if (!user || !checkPassword) return null
+    if (!checkPassword) return null
     return user
   }
 
@@ -20,10 +23,26 @@ export class AuthService {
     const payload = { _id: user._id, email: user.email };
     return {
       access_token: this.jwtService.sign(payload),
+      user: {
+        _id: user._id,
+        email: user.email,
+        name: user.name,
+        phone: user.phone ?? null,
+        address: user.address ?? null,
+        avatar: user.avatar ?? null
+      }
     };
   }
 
   async register(registerDto: RegisterDto) {
     return await this.usersService.register(registerDto)
+  }
+
+  async sendMail(email: string) {
+    const user = await this.usersService.findUserByIdentifier(email);
+    if (!user) {
+      throw new BadRequestException("No user found")
+    }
+    return await this.usersService.sendMail(user)
   }
 }

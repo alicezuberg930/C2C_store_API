@@ -3,9 +3,8 @@ import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/create-auth.dto';
 import { LocalAuthGuard } from './passport/local-auth.guard';
 import { JwtAuthGuard } from './passport/jwt-auth.guard';
-import { Public } from 'src/public_decorator';
+import { Public, ResponseMessage } from 'src/public_decorator';
 import { MailerService } from '@nestjs-modules/mailer';
-import { log } from 'console';
 
 @Controller('auth')
 export class AuthController {
@@ -14,6 +13,7 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @Public()
   @Post("login")
+  @ResponseMessage("Login successfull")
   login(@Request() request: any) {
     return this.authService.login(request.user)
   }
@@ -31,17 +31,7 @@ export class AuthController {
 
   @Get("mail")
   @Public()
-  async sendMail() {
-    try {
-      const mail = await this.mailerService.sendMail({
-        to: "tien23851@gmail.com",
-        subject: "Testing mail",
-        text: "ajvwre",
-        html: "<h1>HTMLLLLL</h1>"
-      })
-      return { mail }
-    } catch (error) {
-      return { error }
-    }
+  async sendMail(@Body() body: any) {
+    return this.authService.sendMail(body.email)
   }
 }
