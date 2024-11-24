@@ -5,6 +5,7 @@ import { LocalAuthGuard } from './passport/local-auth.guard';
 import { JwtAuthGuard } from './passport/jwt-auth.guard';
 import { Public, ResponseMessage } from 'src/public_decorator';
 import { MailerService } from '@nestjs-modules/mailer';
+import { VerifyDto } from './dto/verify-auth.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -33,5 +34,12 @@ export class AuthController {
   @Public()
   async sendMail(@Body() body: any) {
     return this.authService.sendMail(body.email)
+  }
+
+  @Public()
+  @Post("verify")
+  @ResponseMessage("Xác thực mã thành công")
+  verify(@Body() data: VerifyDto) {
+    return this.authService.verify(data)
   }
 }

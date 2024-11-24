@@ -10,6 +10,7 @@ import { RegisterDto } from '../auth/dto/create-auth.dto';
 import { v4 } from 'uuid';
 import dayjs from 'dayjs';
 import { MailerService } from '@nestjs-modules/mailer';
+import { VerifyDto } from '../auth/dto/verify-auth.dto';
 
 @Injectable()
 export class UsersService {
@@ -95,6 +96,17 @@ export class UsersService {
       })
     } catch (error) {
       return { error }
+    }
+  }
+
+  async verify(data: VerifyDto) {
+    const user = await this.userModel.findOne({ _id: data.id, codeId: data.code })
+    if (!user) throw new BadRequestException("Mã không hợp lệ hoặc hết hạn")
+    const isBefore = dayjs().isBefore(user.codeExpired)
+    if (isBefore) {
+      await this.userModel.updateOne({ _id: data.id }, { isEmailVerified: true })
+    } else {
+      throw new BadRequestException("Mã đã hết hạn")
     }
   }
 }

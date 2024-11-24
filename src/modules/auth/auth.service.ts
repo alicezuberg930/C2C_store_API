@@ -6,6 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/create-auth.dto';
 import mongoose from 'mongoose';
 import { User } from '../users/schemas/user.schema';
+import { VerifyDto } from './dto/verify-auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -44,5 +45,9 @@ export class AuthService {
       throw new BadRequestException("No user found")
     }
     return await this.usersService.sendMail(user)
+  }
+
+  async verify(data: VerifyDto) {
+    return await this.usersService.verify(data)
   }
 }
