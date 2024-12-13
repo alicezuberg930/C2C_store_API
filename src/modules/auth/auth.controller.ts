@@ -11,6 +11,7 @@ import { FileSizeValidationPipe } from 'src/common/file.validator';
 import * as multer from 'multer';
 import * as fs from 'fs';
 import * as path from 'path';
+import { error } from 'console';
 
 @Controller('auth')
 export class AuthController {
@@ -49,20 +50,9 @@ export class AuthController {
           console.log(`File deleted: ${files[i].path}`);
         }
       });
+
     }
     return { urls: a }
-    // files.forEach(async (file) => {
-    //   let cloud = await this.authService.uploadImage(file.path)
-    //   console.log(cloud);
-
-    //   fs.unlink(file.path, (err) => {
-    //     if (err) {
-    //       console.error(`Error deleting file ${file.path}: ${err.message}`);
-    //     } else {
-    //       console.log(`File deleted: ${file.path}`);
-    //     }
-    //   });
-    // })
   }
 
   @Public()
