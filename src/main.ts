@@ -21,6 +21,6 @@ async function bootstrap() {
     preflightContinue: false,
     credentials: true,
   })
-  await app.listen(configService.get("PORT"));
+  await app.listen(configService.get("PORT") || 4000);
 }
 bootstrap();
