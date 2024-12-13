@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, FileTypeValidator, Get, HttpStatus, MaxFileSizeValidator, ParseFilePipe, ParseFilePipeBuilder, Post, Request, UploadedFile, UploadedFiles, UseGuards, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/create-auth.dto';
 import { LocalAuthGuard } from './passport/local-auth.guard';
@@ -6,6 +6,11 @@ import { JwtAuthGuard } from './passport/jwt-auth.guard';
 import { Public, ResponseMessage } from 'src/public_decorator';
 import { MailerService } from '@nestjs-modules/mailer';
 import { VerifyDto } from './dto/verify-auth.dto';
+import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
+import { FileSizeValidationPipe } from 'src/common/file.validator';
+import * as multer from 'multer';
+import * as fs from 'fs';
+import * as path from 'path';
 
 @Controller('auth')
 export class AuthController {
@@ -17,6 +22,47 @@ export class AuthController {
   @ResponseMessage("Login successfull")
   login(@Request() request: any) {
     return this.authService.login(request.user)
+  }
+
+  @Post('upload')
+  @UseInterceptors(FilesInterceptor('images'))
+  async uploadFile(@UploadedFiles() files: Array<Express.Multer.File>) {
+    // console.log(files);
+
+    // return {
+    //   message: 'Files uploaded successfully',
+    //   files: files.map((file) => ({
+    //     originalName: file.originalname,
+    //     filename: file.filename,
+    //     path: file.path,
+    //   })),
+    // };
+    let a = [];
+    for (let i = 0; i < files.length; i++) {
+      let cloud = await this.authService.uploadImage(files[i].path)
+      console.log(cloud);
+      a.push(cloud.secure_url)
+      fs.unlink(files[i].path, (err) => {
+        if (err) {
+          console.error(`Error deleting file ${files[i].path}: ${err.message}`);
+        } else {
+          console.log(`File deleted: ${files[i].path}`);
+        }
+      });
+    }
+    return { urls: a }
+    // files.forEach(async (file) => {
+    //   let cloud = await this.authService.uploadImage(file.path)
+    //   console.log(cloud);
+
+    //   fs.unlink(file.path, (err) => {
+    //     if (err) {
+    //       console.error(`Error deleting file ${file.path}: ${err.message}`);
+    //     } else {
+    //       console.log(`File deleted: ${file.path}`);
+    //     }
+    //   });
+    // })
   }
 
   @Public()

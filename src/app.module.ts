@@ -10,6 +10,8 @@ import { JwtAuthGuard } from './modules/auth/passport/jwt-auth.guard';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { TransformInterceptor } from './transform.interceptor';
+import { MulterModule } from '@nestjs/platform-express';
+import { multerOptions } from './common/multer.storage';
 
 @Module({
   imports: [
@@ -52,8 +54,8 @@ import { TransformInterceptor } from './transform.interceptor';
   controllers: [AppController],
   providers: [
     AppService,
-    { provide: APP_GUARD, useClass: JwtAuthGuard },
-    { provide: APP_INTERCEPTOR, useClass: TransformInterceptor }
+    // { provide: APP_GUARD, useClass: JwtAuthGuard },
+    // { provide: APP_INTERCEPTOR, useClass: TransformInterceptor }
   ],
 })
 export class AppModule { }
