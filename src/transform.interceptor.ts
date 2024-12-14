@@ -7,7 +7,7 @@ import { RESPONSE_MESSAGE } from "./public_decorator";
 export interface Response<T> {
     statusCode: number
     message?: string
-    data: any
+    data: T
 }
 
 @Injectable()
@@ -20,7 +20,7 @@ export class TransformInterceptor<T> implements NestInterceptor<T, Response<T>> 
                 statusCode: context.switchToHttp().getResponse().statusCode,
                 message: this.reflector.get<string>(RESPONSE_MESSAGE, context.getHandler()),
                 data: data
-            })
-            ))
+            }))
+        )
     }
 }
