@@ -1,5 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { ConfigDto } from './dto/config.dto';
+import { ConfigDto } from './dto/configs.dto';
 import { InjectModel } from '@nestjs/mongoose';
 import { Config } from './schemas/config.schemas';
 import mongoose, { Model } from 'mongoose';
@@ -22,11 +22,11 @@ export class ConfigsService {
     }
   }
 
-  // bỏ phần này
-  // findAll() {
-  //   return this.configModel.find()
-  // }
+  async findAll() {
+    return await this.configModel.findOne()
+  }
 
+  // bỏ phần này
   // findOne(id: number) {
   //   return `This action returns a #${id} config`;
   // }

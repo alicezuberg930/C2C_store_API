@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, Length, Matches, Max, Min } from "class-validator";
+import { IsEmail, IsNotEmpty, IsOptional, Length, Matches } from "class-validator";
 
 export class ConfigDto {
     @IsNotEmpty({ message: "Tên người dùng không được để trống" })
@@ -20,25 +20,39 @@ export class ConfigDto {
     @IsNotEmpty({ message: "Giờ hoạt động không được để trống" })
     openHour: string
 
+    @IsOptional()
     slogan: string
 
+    @IsOptional()
     googleMap: string
 
     @IsEmail({}, { message: "Email sai định dạng" })
     email: string
 
+    @IsOptional()
     zaloChatURL: string
 
+    @IsOptional()
     facebookChatURL: string
 
+    @IsOptional()
     facebookPage: string
 
+    @IsOptional()
     googlePage: string
 
+    @IsOptional()
     youtubePage: string
 
-    @IsNotEmpty({ message: "Thông tin footer Fkhông được để trống" })
+    @IsNotEmpty({ message: "Thông tin footer không được để trống" })
     footerInfo: string
 
-    footerContact: string
+    @IsNotEmpty({ message: "Thông tin liên lạc không được trống" })
+    footerContact: JSON
+
+    @IsOptional()
+    fax: string
+
+    @IsOptional()
+    facebookID: string
 }

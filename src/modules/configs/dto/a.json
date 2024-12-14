@@ -1,0 +1,19 @@
+{
+  "contacts": [
+    {
+      "label": "Hỗ trợ khách hàng",
+      "phone": "0918 927 300",
+      "email": "ceo.vattunhaxuan@gmail.com"
+    },
+    {
+      "label": "Tư vấn & mua hàng",
+      "phone": "0932 616 986 ",
+      "email": "info.nhaxuan@gmail.com"
+    },
+    {
+      "label": "Hỗ trợ kỹ thuật",
+      "phone": "0935 544 789",
+      "email": "info.nhaxuan@gmail.com"
+    }
+  ]
+}

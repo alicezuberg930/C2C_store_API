@@ -1,6 +1,6 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ConfigsService } from './configs.service';
-import { ConfigDto } from './dto/config.dto';
+import { ConfigDto } from './dto/configs.dto';
 import { ResponseMessage } from 'src/public_decorator';
 
 @Controller('configs')
@@ -13,12 +13,13 @@ export class ConfigsController {
     return this.configsService.configSite(createConfigDto);
   }
 
-  // bỏ phần này
-  // @Get()
-  // findAll() {
-  //   return this.configsService.findAll();
-  // }
+  @ResponseMessage("Lấy thông tin thành công")
+  @Get()
+  findAll() {
+    return this.configsService.findAll();
+  }
 
+  // bỏ phần này
   // @Get(':id')
   // findOne(@Param('id') id: string) {
   //   return this.configsService.findOne(+id);

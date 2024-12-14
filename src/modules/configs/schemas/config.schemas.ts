@@ -47,8 +47,14 @@ export class Config {
     @Prop()
     footerInfo: string
 
+    @Prop({ type: JSON })
+    footerContact: JSON
+
     @Prop()
-    footerContact: string
+    fax: string
+
+    @Prop()
+    facebookID: string
 }
 
 export const ConfigSchema = SchemaFactory.createForClass(Config);
