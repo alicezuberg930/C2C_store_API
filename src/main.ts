@@ -10,8 +10,8 @@ async function bootstrap() {
   app.setGlobalPrefix("api/v1", { exclude: [""] })
   // whitelist configured fields and throw error for non whitelisted fields
   app.useGlobalPipes(new ValidationPipe({
-    // whitelist: true,
-    // forbidNonWhitelisted: true
+    whitelist: true,
+    forbidNonWhitelisted: true
   }))
   // cors configurations
   app.enableCors({
