@@ -9,6 +9,9 @@ export class ConfigDto {
     @Matches(/^[0-9]*$/, { message: "Số điện thoại chỉ được chứa số" })
     phone: string
 
+    @IsOptional()
+    telephone: string
+
     @IsNotEmpty({ message: "Số điện thoại không được để trống" })
     @Length(10, 10, { message: "Số điện thoại phải chứa đúng 10 ký tự" })
     @Matches(/^[0-9]*$/, { message: "Số điện thoại chỉ được chứa số" })

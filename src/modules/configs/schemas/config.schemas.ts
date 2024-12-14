@@ -15,6 +15,9 @@ export class Config {
     phone: string
 
     @Prop()
+    telephone: string
+
+    @Prop()
     hotline: string
 
     @Prop()
