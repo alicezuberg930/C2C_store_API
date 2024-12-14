@@ -14,12 +14,13 @@ async function bootstrap() {
     forbidNonWhitelisted: true
   }))
   // cors configurations
-  // app.enableCors({
-  //   origin: "http://localhost:3000",
-  //   methods: ["POST", "GET", "PUT", "PATCH", "DELETE"],
-  //   preflightContinue: false,
-  //   credentials: true,
-  // })
+  app.enableCors({
+    origin: '*',
+    // origin: "http://localhost:3000",
+    "methods": "GET,HEAD,PUT,PATCH,POST,DELETE",
+    "preflightContinue": false,
+    // credentials: true,
+  })
   await app.listen(4000);
 }
 bootstrap();
