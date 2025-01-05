@@ -5,18 +5,23 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { UsersModule } from './modules/users/users.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { AuthModule } from './modules/auth/auth.module';
-import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtAuthGuard } from './modules/auth/passport/jwt-auth.guard';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { ConfigsModule } from './modules/configs/configs.module';
 import { TransformInterceptor } from './transform.interceptor';
+import { MessagesModule } from './modules/messages/messages.module';
+import { OrdersModule } from './modules/orders/orders.module';
+import { AllExceptionsFilter } from './exception.filter';
 
 @Module({
   imports: [
     UsersModule,
     AuthModule,
     ConfigsModule,
+    MessagesModule,
+    OrdersModule,
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
@@ -55,7 +60,8 @@ import { TransformInterceptor } from './transform.interceptor';
   providers: [
     AppService,
     // { provide: APP_GUARD, useClass: JwtAuthGuard },
-    { provide: APP_INTERCEPTOR, useClass: TransformInterceptor }
+    { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
+    { provide: APP_FILTER, useClass: AllExceptionsFilter }
   ],
 })
 export class AppModule { }
