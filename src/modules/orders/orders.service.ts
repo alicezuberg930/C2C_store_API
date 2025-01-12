@@ -21,7 +21,7 @@ export class OrdersService {
         partnerName: "Test",
         storeId: "MomoTestStore",
         requestId: order._id,
-        // amount: createOrderDto.amount,
+        amount: createOrderDto.amount,
         orderId: order._id,
         orderInfo: "pay with MoMo",
         redirectUrl: "https://locahost:3000/test",
@@ -46,7 +46,7 @@ export class OrdersService {
       delete requestBody.accessKey
       try {
         let res = await axios({ url: `https://test-payment.momo.vn/v2/gateway/api/create`, method: "POST", timeout: 30000, data: requestBody })
-        return res.data
+        return { order: order, payment: res.data }
       } catch (error) {
         if (isAxiosError(error))
           throw new HttpException(error.response.data, HttpStatus.BAD_REQUEST);
@@ -55,7 +55,8 @@ export class OrdersService {
   }
 
   findAll() {
-    return `This action returns all orders`
+    const orders = this.orderModel.find()
+    return orders 
   }
 
   findOne(id: number) {

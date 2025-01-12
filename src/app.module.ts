@@ -14,6 +14,7 @@ import { TransformInterceptor } from './transform.interceptor';
 import { MessagesModule } from './modules/messages/messages.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { AllExceptionsFilter } from './exception.filter';
+import { TransactionsModule } from './modules/transactions/transactions.module';
 
 @Module({
   imports: [
@@ -22,7 +23,10 @@ import { AllExceptionsFilter } from './exception.filter';
     ConfigsModule,
     MessagesModule,
     OrdersModule,
+    TransactionsModule,
+    // Env config module
     ConfigModule.forRoot({ isGlobal: true }),
+    // Mongodb config mondule
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
@@ -30,6 +34,7 @@ import { AllExceptionsFilter } from './exception.filter';
       }),
       inject: [ConfigService],
     }),
+    // Send mail config module
     MailerModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({

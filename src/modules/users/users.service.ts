@@ -28,25 +28,45 @@ export class UsersService {
       throw new BadRequestException(["Email đã tồn tại"])
     }
     const hashedPassword = await hashPassword(password)
-    const user = await this.userModel.create({
-      name, email, password: hashedPassword, phone, address, avatar
-    })
-    return {
-      id: user._id
-    };
+    try {
+      const user = await this.userModel.create({
+        name, email, password: hashedPassword, phone, address, avatar
+      })
+      return user
+    } catch (error) {
+      return error
+    }
   }
 
   async get(query: string, page: number, pageSize: number) {
-    const { filter, limit, sort } = aqp(query)
-    if (!page) page = 1
-    if (!pageSize) pageSize = 5
-    //  Tổng số dữ liệu
-    const totalRows = (await this.userModel.find({})).length
-    const totalPages = Math.ceil(totalRows / pageSize)
-    const skip = (page - 1) * pageSize
+    try {
+      if (!page) page = 1
+      if (!pageSize) pageSize = 5
+      //  Tổng số dữ liệu
+      const totalRows = (await this.userModel.find({})).length
+      const totalPages = Math.ceil(totalRows / pageSize)
+      const skip = (page - 1) * pageSize
 
-    const results = await this.userModel.find({}).limit(pageSize).skip(skip).sort(sort as any).select("-password")
-    return { results, totalPages }
+      const users: Model<User>[] = await this.userModel.aggregate([
+        {
+          $lookup: {
+            from: 'transactions', // The name of the transaction collection
+            localField: '_id', // The field in the user schema
+            foreignField: 'userId', // The field in the transaction schema
+            as: 'transactions', // The name of the field to store the joined data
+          },
+        },
+        {
+          $project: {
+            'password': 0,
+            'transactions.userId': 0,
+          }
+        },
+      ]).limit(pageSize).skip(skip)
+      return { payload: users, totalPages, pageSize, page }
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
   }
 
   show(id: number) {
