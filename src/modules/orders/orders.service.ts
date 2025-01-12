@@ -6,6 +6,7 @@ import crypto from 'crypto'
 import { InjectModel } from '@nestjs/mongoose'
 import { Order } from './schemas/order.schema'
 import { Model } from 'mongoose'
+import { momoPayment } from 'src/common/utils'
 
 @Injectable()
 export class OrdersService {
@@ -14,49 +15,22 @@ export class OrdersService {
   async create(createOrderDto: CreateOrderDto) {
     let order = await this.orderModel.create({ ...createOrderDto })
     if (createOrderDto.paymentMethod == "momo") {
-      let secretKey = 'K951B6PE1waDMi640xX08PD3vg6EkVlz'
-      //json object send to MoMo endpoint
-      const requestBody = {
-        partnerCode: "MOMO",
-        partnerName: "Test",
-        storeId: "MomoTestStore",
-        requestId: order._id,
-        amount: createOrderDto.amount,
-        orderId: order._id,
-        orderInfo: "pay with MoMo",
-        redirectUrl: "https://locahost:3000/test",
-        ipnUrl: "https://locahost:3000/test",
-        lang: 'vi',
-        requestType: "captureWallet",
-        autoCapture: true,
-        extraData: '',
-        orderGroupId: '',
-        accessKey: 'F8BBA842ECF85',
-      }
-      // sort json object in key ascending order
-      const sortedRequestBody = Object.keys(requestBody).sort().reduce((acc: any, key: string) => {
-        acc[key] = requestBody[key]
-        return acc
-      }, {})
-      // before sign HMAC SHA256 with format
-      let excludeKeys: string[] = ["orderGroupId", "autoCapture", "storeId", "partnerName", "lang"]
-      let rawSignature = Object.entries(sortedRequestBody).filter(([key]) => !excludeKeys.includes(key)).map(([key, value]) => `${key}=${value}`).join('&')
-      let signature = crypto.createHmac('sha256', secretKey).update(rawSignature).digest('hex')
-      requestBody["signature"] = signature
-      delete requestBody.accessKey
+      const requestBody = momoPayment({ requestId: order.id, orderId: order.id, amount: createOrderDto.amount })
       try {
         let res = await axios({ url: `https://test-payment.momo.vn/v2/gateway/api/create`, method: "POST", timeout: 30000, data: requestBody })
         return { order: order, payment: res.data }
       } catch (error) {
-        if (isAxiosError(error))
-          throw new HttpException(error.response.data, HttpStatus.BAD_REQUEST);
+        if (isAxiosError(error)) {
+          if (error.response) throw new BadRequestException(error.response.data)
+          else throw new BadRequestException()
+        }
       }
     }
   }
 
   findAll() {
     const orders = this.orderModel.find()
-    return orders 
+    return orders
   }
 
   findOne(id: number) {

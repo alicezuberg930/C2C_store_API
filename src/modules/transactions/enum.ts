@@ -5,3 +5,7 @@ export enum transactionTypes {
 export enum transactionStatuses {
     "pending", "completed", "failed"
 }
+
+export enum paymentMethods {
+    "momo", "vnpay", "zalopay", "onepay"
+}

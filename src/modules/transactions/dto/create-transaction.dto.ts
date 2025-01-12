@@ -1,5 +1,5 @@
 import { IsEnum, IsNotEmpty, IsNumber, IsOptional } from "class-validator";
-import { transactionStatuses, transactionTypes } from "../enum";
+import { paymentMethods, transactionStatuses, transactionTypes } from "../enum";
 import { Types } from "mongoose";
 
 export class CreateTransactionDto {
@@ -19,4 +19,7 @@ export class CreateTransactionDto {
 
     @IsOptional()
     description: string;
+
+    @IsEnum(paymentMethods, { message: "Phương thức thanh toán không hợp lệ" })
+    paymentMethod: string;
 }
