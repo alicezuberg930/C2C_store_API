@@ -42,9 +42,7 @@ export class AuthService {
 
   async sendMail(email: string) {
     const user = await this.usersService.findUserByIdentifier(email);
-    if (!user) {
-      throw new BadRequestException("No user found")
-    }
+    if (!user) throw new BadRequestException("No user found")
     return await this.usersService.sendMail(user)
   }
 
