@@ -21,7 +21,7 @@ export class AuthService {
     return user
   }
 
-  async login(user: any) {
+  async login(user: mongoose.Document<unknown, {}, User> & User) {
     const payload = { _id: user._id, email: user.email };
     return {
       access_token: this.jwtService.sign(payload),
@@ -61,13 +61,11 @@ export class AuthService {
     // Upload an image
 
     try {
-      const uploadResult = await cloudinary.uploader
-        .upload(
-          path, {
-          // public_id: 'products',
-          folder: 'products',
-          resource_type: 'image'
-        })
+      const uploadResult = await cloudinary.uploader.upload(path, {
+        folder: 'products',
+        resource_type: 'image'
+      })
+      // public_id: 'products',
       return uploadResult
     } catch (error) {
       return error

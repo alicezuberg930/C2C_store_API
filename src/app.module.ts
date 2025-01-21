@@ -27,7 +27,7 @@ import { BrandsModule } from './modules/brands/brands.module';
     MessagesModule,
     OrdersModule,
     TransactionsModule,
-    ProductsModule,
+    // ProductsModule,
     // CategoriesModule,
     // BrandsModule,
     // Env config module
