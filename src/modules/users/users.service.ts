@@ -38,7 +38,7 @@ export class UsersService {
     }
   }
 
-  async get(query: string, page: number, pageSize: number) {
+  async get(page: number, pageSize: number) {
     try {
       if (!page) page = 1
       if (!pageSize) pageSize = 5

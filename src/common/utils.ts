@@ -56,4 +56,4 @@ export const verifyMomoSignature = (query: any): boolean => {
     const rawSignature = `accessKey=${accessKey}&amount=${amount}&extraData=${extraData}&message=${message}&orderId=${orderId}&orderInfo=${orderInfo}&orderType=${orderType}&partnerCode=${partnerCode}&responseTime=${responseTime}&resultCode=${resultCode}&requestId=${requestId}`
     const expectedSignature = crypto.createHmac('sha256', secretKey).update(rawSignature).digest('hex')
     return signature === expectedSignature
-}
+} 

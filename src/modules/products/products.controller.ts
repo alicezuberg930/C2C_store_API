@@ -1,20 +1,23 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
+import { ProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductQuery } from './query/product.query';
+import { ResponseMessage } from 'src/public_decorator';
 
 @Controller('products')
 export class ProductsController {
-  constructor(private readonly productsService: ProductsService) {}
+  constructor(private readonly productsService: ProductsService) { }
 
   @Post()
-  create(@Body() createProductDto: CreateProductDto) {
-    return this.productsService.create(createProductDto);
+  create(@Body() productDto: ProductDto) {
+    return this.productsService.create(productDto);
   }
 
+  @ResponseMessage('Lấy dữ liệu sản phẩm thành công')
   @Get()
-  findAll() {
-    return this.productsService.findAll();
+  findAll(@Query() query: ProductQuery) {
+    return this.productsService.findAll(query);
   }
 
   @Get(':id')

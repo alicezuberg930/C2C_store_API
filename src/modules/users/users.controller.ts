@@ -17,7 +17,7 @@ export class UsersController {
   @ResponseMessage("Lấy dữ liệu thành công")
   @Get()
   get(@Query() query: string, @Query("page") page: string, @Query("pageSize") pageSize: string) {
-    return this.usersService.get(query, +page, +pageSize);
+    return this.usersService.get(+page, +pageSize);
   }
 
   @Get(':id')

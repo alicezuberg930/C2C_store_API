@@ -15,6 +15,8 @@ import { MessagesModule } from './modules/messages/messages.module';
 import { OrdersModule } from './modules/orders/orders.module';
 import { AllExceptionsFilter } from './exception.filter';
 import { TransactionsModule } from './modules/transactions/transactions.module';
+import { ProductsModule } from './modules/products/products.module';
+import { CategoriesModule } from './modules/categories/categories.module';
 
 @Module({
   imports: [
@@ -24,6 +26,8 @@ import { TransactionsModule } from './modules/transactions/transactions.module';
     MessagesModule,
     OrdersModule,
     TransactionsModule,
+    ProductsModule,
+    CategoriesModule,
     // Env config module
     ConfigModule.forRoot({ isGlobal: true }),
     // Mongodb config mondule
