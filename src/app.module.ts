@@ -17,6 +17,7 @@ import { AllExceptionsFilter } from './exception.filter';
 import { TransactionsModule } from './modules/transactions/transactions.module';
 import { ProductsModule } from './modules/products/products.module';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { BrandsModule } from './modules/brands/brands.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
     TransactionsModule,
     ProductsModule,
     CategoriesModule,
+    BrandsModule,
     // Env config module
     ConfigModule.forRoot({ isGlobal: true }),
     // Mongodb config mondule

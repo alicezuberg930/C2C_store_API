@@ -1,6 +1,6 @@
 
 import { Prop, SchemaFactory, Schema } from "@nestjs/mongoose";
-import { HydratedDocument } from "mongoose";
+import { HydratedDocument, Schema as MongooseSchema } from "mongoose";
 import { Variation } from "./variation.schema";
 
 export type CatDocument = HydratedDocument<Product>;
@@ -19,11 +19,11 @@ export class Product {
     @Prop()
     stock: number
 
-    @Prop()
-    categoryId: string
+    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Category' })
+    category: MongooseSchema.Types.ObjectId
 
-    @Prop()
-    brandId: string
+    @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'Brand' })
+    brand: MongooseSchema.Types.ObjectId
 
     @Prop()
     images: string[]

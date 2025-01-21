@@ -1,9 +1,7 @@
-
-import { Type } from '@nestjs/common';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document, HydratedDocument, Types } from 'mongoose';
+import { HydratedDocument, Types } from 'mongoose';
 
-export type CatDocument = HydratedDocument<Category>
+export type CategoryDocument = HydratedDocument<Category>
 
 @Schema({ timestamps: true })
 export class Category {

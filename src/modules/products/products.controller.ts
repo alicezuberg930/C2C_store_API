@@ -10,8 +10,8 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) { }
 
   @Post()
-  create(@Body() productDto: ProductDto) {
-    return this.productsService.create(productDto);
+  create(@Body() productData: ProductDto) {
+    return this.productsService.create(productData);
   }
 
   @ResponseMessage('Lấy dữ liệu sản phẩm thành công')
@@ -22,7 +22,7 @@ export class ProductsController {
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.productsService.findOne(+id);
+    return this.productsService.findOne(id);
   }
 
   @Patch(':id')
@@ -32,6 +32,6 @@ export class ProductsController {
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.productsService.remove(+id);
+    return this.productsService.remove(id);
   }
 }

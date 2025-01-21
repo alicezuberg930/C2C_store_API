@@ -22,7 +22,7 @@ export class UsersController {
 
   @Get(':id')
   show(@Param('id') id: string) {
-    return this.usersService.show(+id);
+    return this.usersService.show(id);
   }
 
   @Patch(':id')

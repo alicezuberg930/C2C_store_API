@@ -1,13 +1,13 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model, Types } from 'mongoose'
-import { CatDocument, Category } from './schemas/category.schema'
+import { CategoryDocument, Category } from './schemas/category.schema'
 import { CreateCategoryDto } from './dto/create-category.dto'
 import { UpdateCategoryDto } from './dto/update-category.dto'
 
 @Injectable()
 export class CategoriesService {
-  constructor(@InjectModel(Category.name) private categoryModel: Model<CatDocument>) { }
+  constructor(@InjectModel(Category.name) private categoryModel: Model<CategoryDocument>) { }
 
   async create(categoryData: CreateCategoryDto) {
     let { parentCategoryId } = categoryData
@@ -67,7 +67,7 @@ export class CategoriesService {
   async delete(id: string) {
     try {
       const category = await this.categoryModel.findById(id)
-      if (!category) throw new Error('Category not found')
+      if (!category) throw new NotFoundException('Không tìm thấy thương hiệu')
       // Remove the reference from the parent's children array (if parent exists)
       if (category.parentCategoryId) {
         await this.categoryModel.findByIdAndUpdate(
@@ -109,5 +109,4 @@ export class CategoriesService {
       throw new BadRequestException(error)
     }
   }
-
 }

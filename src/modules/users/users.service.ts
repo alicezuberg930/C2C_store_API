@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './schemas/user.schema';
@@ -69,8 +69,14 @@ export class UsersService {
     }
   }
 
-  show(id: number) {
-    return `This action returns a #${id} user`;
+  async show(id: string) {
+    try {
+      const user = await this.userModel.findById(id)
+      if (!user) throw new NotFoundException('Không tìm thấy người dùng')
+      return user
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {

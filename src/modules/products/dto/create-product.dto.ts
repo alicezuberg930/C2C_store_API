@@ -35,10 +35,10 @@ export class ProductDto {
     stock: number
 
     @IsOptional()
-    categoryId: string
+    category: string
 
     @IsOptional()
-    brandId: string
+    brand: string
 }
 
 class VariationDto {
