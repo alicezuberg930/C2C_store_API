@@ -4,19 +4,19 @@ import { UpdateBrandDto } from './dto/update-brand.dto'
 import { InjectModel } from '@nestjs/mongoose'
 import { Brand, BrandDocument } from './schemas/brand.schema'
 import { Model, Types } from 'mongoose'
-import { Category, CategoryDocument } from '../categories/schemas/category.schema'
+// import { Category, CategoryDocument } from '../categories/schemas/category.schema'
 
 @Injectable()
 export class BrandsService {
-  constructor(@InjectModel(Brand.name) private brandModel: Model<BrandDocument>, @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>) { }
-
+  constructor(@InjectModel(Brand.name) private brandModel: Model<BrandDocument>) { }
+  // @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>
   async create(brandData: CreateBrandDto) {
     try {
       let categoryIds: Types.ObjectId[] = []
       if (brandData.categories) {
         for (let i = 0; i < brandData.categories.length; i++) {
-          const category = await this.categoryModel.findById(brandData.categories[i])
-          if (!category) throw new NotFoundException('Có 1 ngành hàng không tồn tại')
+          // const category = await this.categoryModel.findById(brandData.categories[i])
+          // if (!category) throw new NotFoundException('Có 1 ngành hàng không tồn tại')
           categoryIds.push(new Types.ObjectId(brandData.categories[i]))
         }
       }
@@ -63,8 +63,8 @@ export class BrandsService {
       let categoryIds: Types.ObjectId[] = []
       if (brandData.categories) {
         for (let i = 0; i < brandData.categories.length; i++) {
-          const category = await this.categoryModel.findById(brandData.categories[i])
-          if (!category) throw new NotFoundException('Có 1 ngành hàng không tồn tại')
+          // const category = await this.categoryModel.findById(brandData.categories[i])
+          // if (!category) throw new NotFoundException('Có 1 ngành hàng không tồn tại')
           categoryIds.push(new Types.ObjectId(brandData.categories[i]))
         }
       }

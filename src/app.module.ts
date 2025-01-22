@@ -27,9 +27,9 @@ import { BrandsModule } from './modules/brands/brands.module';
     MessagesModule,
     OrdersModule,
     TransactionsModule,
-    // ProductsModule,
-    // CategoriesModule,
-    // BrandsModule,
+    ProductsModule,
+    CategoriesModule,
+    BrandsModule,
     // Env config module
     ConfigModule.forRoot({ isGlobal: true }),
     // Mongodb config mondule
