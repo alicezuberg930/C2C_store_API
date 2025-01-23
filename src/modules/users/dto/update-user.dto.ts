@@ -1,23 +1,31 @@
 import { PartialType } from '@nestjs/mapped-types';
 import { CreateUserDto } from './create-user.dto';
-import { IsEmail, IsNotEmpty, IsOptional, Length } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, Length, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 
-export class UpdateUserDto extends PartialType(CreateUserDto) {
-    // @IsNotEmpty({ message: "Tên người dùng không được để trống" })
+class DeliveryAddressDto {
     @IsOptional()
-    name: string;
-
-    @IsOptional()
-    @IsEmail({}, { message: "Email sai định dạng" })
-    email: string;
+    city: string
 
     @IsOptional()
-    @Length(10, 10)
-    phone: string
+    district: string
+
+    @IsOptional()
+    ward: string
+
+    @IsOptional()
+    street: string
 
     @IsOptional()
     address: string
+}
 
+export class UpdateUserDto extends PartialType(CreateUserDto) {
     @IsOptional()
-    avatar: string
+    balance: number
+
+    @ValidateNested({ each: true }) // Ensures validation for each item in the array
+    @Type(() => DeliveryAddressDto) // Specifies the class type for transformation
+    // @IsOptional()
+    deliveryAddress: DeliveryAddressDto
 }

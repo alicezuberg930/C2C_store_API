@@ -47,6 +47,7 @@ export class ProductsService {
       if (query.categoryId) filter.categoryId = query.categoryId;
       if (query.brandId) filter.brandId = query.brandId;
       const totalProducts = await this.productModel.countDocuments(filter)
+      const totalPages = Math.ceil(totalProducts / pageSize)
       const products = await this.productModel.aggregate([
         { $match: filter },
         {
@@ -82,7 +83,6 @@ export class ProductsService {
           },
         },
       ]).skip(skip).limit(pageSize)
-      const totalPages = Math.ceil(totalProducts / pageSize)
       return { payload: products, totalPages, pageSize, page }
     } catch (error) {
       throw new BadRequestException(error)

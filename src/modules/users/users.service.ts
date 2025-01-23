@@ -11,6 +11,7 @@ import { v4 } from 'uuid';
 import dayjs from 'dayjs';
 import { MailerService } from '@nestjs-modules/mailer';
 import { VerifyDto } from '../auth/dto/verify-auth.dto';
+import { UserQuery } from './query/user.query';
 
 @Injectable()
 export class UsersService {
@@ -31,24 +32,27 @@ export class UsersService {
       const { email, password } = userData
       if (await this.isEmailExist(email)) throw new BadRequestException('Email đã tồn tại')
       const hashedPassword = await hashPassword(password)
-      const user = await this.userModel.create({ ...userData, password: hashedPassword })
+      const user = await this.userModel.create({ ...userData, password: hashedPassword, wallet: { balance: 0 } })
       return user
     } catch (error) {
       throw new BadRequestException(error)
     }
   }
 
-  async get(page: number, pageSize: number) {
+  async findAll(query: UserQuery) {
     try {
-      if (!page) page = 1
-      if (!pageSize) pageSize = 5
-      const totalRows = (await this.userModel.find({})).length
-      const totalPages = Math.ceil(totalRows / pageSize)
+      const page: number = +(query.page ?? 1)
+      const pageSize: number = +(query.pageSize ?? 10)
       const skip = (page - 1) * pageSize
-      const users: Model<User>[] = await this.userModel.aggregate([
+      // filter options
+      const filter: Record<string, any> = {};
+      if (query.name) filter.name = query.name
+      const totalUsers = await this.userModel.countDocuments(filter)
+      const totalPages = Math.ceil(totalUsers / pageSize)
+      const users = await this.userModel.aggregate([
         {
           $lookup: {
-            from: 'transactions', // The name of the transaction collection
+            from: 'transactions', // The name of the transactions collection
             localField: '_id', // The field in the user schema
             foreignField: 'userId', // The field in the transaction schema
             as: 'transactions', // The name of the field to store the joined data
@@ -79,9 +83,11 @@ export class UsersService {
 
   async update(id: string, userData: UpdateUserDto) {
     try {
-      const updatedUser = await this.userModel.updateOne({ _id: id }, { ...userData })
-      if (!updatedUser) throw new NotFoundException('Không tìm thấy người dùng')
-      return updatedUser
+      const user = await this.userModel.findById(id)
+      if (!user) throw new NotFoundException('Không tìm thấy người dùng')
+      const deliveryAddresses = user.deliveryAddresses ?? []
+      if (userData.deliveryAddress) deliveryAddresses.push(userData.deliveryAddress)
+      return await this.userModel.findOneAndUpdate({ _id: id }, { ...userData, deliveryAddresses }, { new: true })
     } catch (error) {
       throw new BadRequestException(error)
     }

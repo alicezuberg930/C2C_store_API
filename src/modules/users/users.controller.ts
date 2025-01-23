@@ -3,6 +3,7 @@ import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { ResponseMessage } from 'src/public_decorator';
+import { UserQuery } from './query/user.query';
 
 @Controller('users')
 export class UsersController {
@@ -10,14 +11,14 @@ export class UsersController {
 
   @ResponseMessage("Đăng ký thành công")
   @Post()
-  create(@Body() createUserDto: CreateUserDto) {
-    return this.usersService.create(createUserDto);
+  create(@Body() userData: CreateUserDto) {
+    return this.usersService.create(userData);
   }
 
   @ResponseMessage("Lấy dữ liệu thành công")
   @Get()
-  get(@Query() query: string, @Query("page") page: string, @Query("pageSize") pageSize: string) {
-    return this.usersService.get(+page, +pageSize);
+  findAll(@Query() query: UserQuery) {
+    return this.usersService.findAll(query);
   }
 
   @Get(':id')
@@ -26,8 +27,8 @@ export class UsersController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(id, updateUserDto);
+  update(@Param('id') id: string, @Body() userData: UpdateUserDto) {
+    return this.usersService.update(id, userData);
   }
 
   @Delete(':id')

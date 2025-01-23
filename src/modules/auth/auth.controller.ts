@@ -11,7 +11,6 @@ import { FileSizeValidationPipe } from 'src/common/file.validator';
 import * as multer from 'multer';
 import * as fs from 'fs';
 import * as path from 'path';
-import { error } from 'console';
 
 @Controller('auth')
 export class AuthController {
@@ -30,7 +29,6 @@ export class AuthController {
   @UseInterceptors(FilesInterceptor('images'))
   async uploadFile(@UploadedFiles() files: Array<Express.Multer.File>) {
     // console.log(files);
-
     // return {
     //   message: 'Files uploaded successfully',
     //   files: files.map((file) => ({
