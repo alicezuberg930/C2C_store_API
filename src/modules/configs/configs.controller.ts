@@ -1,18 +1,20 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
 import { ConfigsService } from './configs.service';
 import { ConfigDto } from './dto/configs.dto';
-import { ResponseMessage } from 'src/public_decorator';
+import { Public, ResponseMessage } from 'src/public.decorator';
 
 @Controller('configs')
 export class ConfigsController {
   constructor(private readonly configsService: ConfigsService) { }
 
+  @Public()
   @Post()
   @ResponseMessage("Cập nhật thông tin thành công")
   configSite(@Body() createConfigDto: ConfigDto) {
     return this.configsService.configSite(createConfigDto);
   }
 
+  @Public()
   @ResponseMessage("Lấy thông tin thành công")
   @Get()
   findAll() {

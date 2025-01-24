@@ -1,17 +1,17 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
-import { User } from './schemas/user.schema';
-import mongoose, { Model } from 'mongoose';
-import { InjectModel } from '@nestjs/mongoose';
-import { hashPassword } from 'src/common/utils';
-import aqp from 'api-query-params';
-import { RegisterDto } from '../auth/dto/create-auth.dto';
-import { v4 } from 'uuid';
-import dayjs from 'dayjs';
-import { MailerService } from '@nestjs-modules/mailer';
-import { VerifyDto } from '../auth/dto/verify-auth.dto';
-import { UserQuery } from './query/user.query';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
+import { CreateUserDto } from './dto/create-user.dto'
+import { UpdateUserDto } from './dto/update-user.dto'
+import { User } from './schemas/user.schema'
+import mongoose, { Model, Types } from 'mongoose'
+import { InjectModel } from '@nestjs/mongoose'
+import { hashPassword } from 'src/common/utils'
+import { RegisterDto } from '../auth/dto/create-auth.dto'
+import { v4 } from 'uuid'
+import dayjs from 'dayjs'
+import { MailerService } from '@nestjs-modules/mailer'
+import { VerifyDto } from '../auth/dto/verify-auth.dto'
+import { UserQuery } from './query/user.query'
+import { DeliveryAddressDto } from './dto/delivery.address.dto'
 
 @Injectable()
 export class UsersService {
@@ -29,11 +29,9 @@ export class UsersService {
 
   async create(userData: CreateUserDto) {
     try {
-      const { email, password } = userData
-      if (await this.isEmailExist(email)) throw new BadRequestException('Email đã tồn tại')
-      const hashedPassword = await hashPassword(password)
-      const user = await this.userModel.create({ ...userData, password: hashedPassword, wallet: { balance: 0 } })
-      return user
+      if (await this.isEmailExist(userData.email)) throw new BadRequestException('Email đã tồn tại')
+      const hashedPassword = await hashPassword(userData.password)
+      return await this.userModel.create({ ...userData, password: hashedPassword })
     } catch (error) {
       throw new BadRequestException(error)
     }
@@ -45,7 +43,7 @@ export class UsersService {
       const pageSize: number = +(query.pageSize ?? 10)
       const skip = (page - 1) * pageSize
       // filter options
-      const filter: Record<string, any> = {};
+      const filter: Record<string, any> = {}
       if (query.name) filter.name = query.name
       const totalUsers = await this.userModel.countDocuments(filter)
       const totalPages = Math.ceil(totalUsers / pageSize)
@@ -71,9 +69,9 @@ export class UsersService {
     }
   }
 
-  async show(id: string) {
+  async findOne(userId: string) {
     try {
-      const user = await this.userModel.findById(id)
+      const user = await this.userModel.findById(userId)
       if (!user) throw new NotFoundException('Không tìm thấy người dùng')
       return user
     } catch (error) {
@@ -85,9 +83,7 @@ export class UsersService {
     try {
       const user = await this.userModel.findById(id)
       if (!user) throw new NotFoundException('Không tìm thấy người dùng')
-      const deliveryAddresses = user.deliveryAddresses ?? []
-      if (userData.deliveryAddress) deliveryAddresses.push(userData.deliveryAddress)
-      return await this.userModel.findOneAndUpdate({ _id: id }, { ...userData, deliveryAddresses }, { new: true })
+      return await this.userModel.findOneAndUpdate({ _id: id }, { ...userData }, { new: true })
     } catch (error) {
       throw new BadRequestException(error)
     }
@@ -143,6 +139,70 @@ export class UsersService {
       } else {
         throw new BadRequestException('Mã đã hết hạn')
       }
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
+  }
+
+  async findAllDeliveryAddress(userId: string) {
+    try {
+      let user = await this.userModel.findById({ _id: userId })
+      if (!user) throw new NotFoundException('Người dùng không tồn tại')
+      return user.deliveryAddresses
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
+  }
+
+  async createDeliveryAddress(userId: string, deliveryAddressData: DeliveryAddressDto) {
+    try {
+      delete deliveryAddressData._id
+      return await this.userModel.findOneAndUpdate(
+        { _id: userId },
+        { $push: { 'deliveryAddresses': deliveryAddressData } },
+        { new: true },
+      )
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
+  }
+
+  async updateDeliveryAddress(userId: string, deliveryAddressData: DeliveryAddressDto) {
+    try {
+      deliveryAddressData._id = new Types.ObjectId(deliveryAddressData._id)
+      if (deliveryAddressData.isDefault == true) {
+        await this.userModel.updateOne(
+          { _id: userId, 'deliveryAddresses.isDefault': true },
+          { $set: { 'deliveryAddresses.$.isDefault': false } },
+        )
+      }
+      const updatedAddress = await this.userModel.findOneAndUpdate(
+        {
+          _id: userId,
+          'deliveryAddresses._id': deliveryAddressData._id,
+        },
+        {
+          $set: { 'deliveryAddresses.$': deliveryAddressData },
+        },
+        { new: true },
+      )
+      if (!updatedAddress) throw new NotFoundException('Không tìm thấy địa chỉ')
+      return updatedAddress
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
+  }
+
+  async deleteDeliveryAddress(userId: string, deliveryAddressData: DeliveryAddressDto) {
+    try {
+      const deletedAddress = await this.userModel.findOneAndUpdate(
+        { _id: userId },
+        {
+          $pull: { deliveryAddresses: { _id: deliveryAddressData._id } }
+        },
+        { new: true },
+      )
+      if (!deletedAddress) throw new NotFoundException('Không tìm thấy địa chỉ')
     } catch (error) {
       throw new BadRequestException(error)
     }

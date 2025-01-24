@@ -18,6 +18,7 @@ import { TransactionsModule } from './modules/transactions/transactions.module';
 import { ProductsModule } from './modules/products/products.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { BrandsModule } from './modules/brands/brands.module';
+import { BannersModule } from './modules/banners/banners.module';
 
 @Module({
   imports: [
@@ -66,11 +67,12 @@ import { BrandsModule } from './modules/brands/brands.module';
       }),
       inject: [ConfigService],
     }),
+    BannersModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    // { provide: APP_GUARD, useClass: JwtAuthGuard },
+    { provide: APP_GUARD, useClass: JwtAuthGuard },
     { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
     { provide: APP_FILTER, useClass: AllExceptionsFilter }
   ],

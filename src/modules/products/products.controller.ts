@@ -3,7 +3,7 @@ import { ProductsService } from './products.service';
 import { ProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductQuery } from './query/product.query';
-import { ResponseMessage } from 'src/public_decorator';
+import { ResponseMessage } from 'src/public.decorator';
 
 @Controller('products')
 export class ProductsController {

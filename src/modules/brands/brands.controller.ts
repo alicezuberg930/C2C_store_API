@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { BrandsService } from './brands.service';
 import { CreateBrandDto } from './dto/create-brand.dto';
 import { UpdateBrandDto } from './dto/update-brand.dto';
-import { ResponseMessage } from 'src/public_decorator';
+import { ResponseMessage } from 'src/public.decorator';
 
 @Controller('brands')
 export class BrandsController {

@@ -14,7 +14,7 @@ export class User {
     @Prop()
     email: string
 
-    @Prop({ select: false })
+    @Prop()
     password: string
 
     @Prop({ length: 10 })
@@ -38,13 +38,11 @@ export class User {
     @Prop({ type: Date })
     codeExpired: Date
 
-    @Prop({ type: Wallet })
+    @Prop({ type: Wallet, default: () => ({ balance: 0 }) })
     wallet: Wallet
 
     @Prop({ type: [DeliveryAddress], default: [] })
     deliveryAddresses: DeliveryAddress[]
 }
 
-const UserSchema = SchemaFactory.createForClass(User)
-
-export { UserSchema }
+export const UserSchema = SchemaFactory.createForClass(User)

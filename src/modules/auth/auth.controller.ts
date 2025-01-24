@@ -2,26 +2,22 @@ import { Body, Controller, FileTypeValidator, Get, HttpStatus, MaxFileSizeValida
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/create-auth.dto';
 import { LocalAuthGuard } from './passport/local-auth.guard';
-import { JwtAuthGuard } from './passport/jwt-auth.guard';
-import { Public, ResponseMessage } from 'src/public_decorator';
+import { Public, ResponseMessage } from 'src/public.decorator';
 import { MailerService } from '@nestjs-modules/mailer';
 import { VerifyDto } from './dto/verify-auth.dto';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { FileSizeValidationPipe } from 'src/common/file.validator';
-import * as multer from 'multer';
 import * as fs from 'fs';
-import * as path from 'path';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService, private readonly mailerService: MailerService) { }
+  constructor(private readonly authService: AuthService) { }
 
   @UseGuards(LocalAuthGuard)
   @Public()
   @Post("login")
   @ResponseMessage("Đăng nhập thành công")
   login(@Request() request: any) {
-    console.log(request.user);
     return this.authService.login(request.user)
   }
 
@@ -58,11 +54,6 @@ export class AuthController {
   @Post("register")
   register(@Body() registerDto: RegisterDto) {
     return this.authService.register(registerDto)
-  }
-
-  @Get("profile")
-  profile(@Request() request: any) {
-    return (request.user)
   }
 
   @Get("mail")
