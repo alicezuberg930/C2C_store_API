@@ -38,7 +38,7 @@ export class UsersController {
     return this.usersService.delete(id)
   }
 
-  @ResponseMessage('Tạo địa chỉ thành công')
+  @ResponseMessage('Lấy dữ liệu thành công')
   @Get('delivery/address')
   findAllDeliveryAddress(@CurrentUser('_id') userId: string) {
     return this.usersService.findAllDeliveryAddress(userId)
@@ -51,14 +51,14 @@ export class UsersController {
   }
 
   @ResponseMessage('Cập nhật địa chỉ thành công')
-  @Patch('delivery/address')
-  updateDeliveryAddress(@CurrentUser('_id') userId: string, @Body() deliveryAddressData: DeliveryAddressDto) {
-    return this.usersService.updateDeliveryAddress(userId, deliveryAddressData)
+  @Patch('delivery/address/:id')
+  updateDeliveryAddress(@CurrentUser('_id') userId: string, @Body() deliveryAddressData: DeliveryAddressDto, @Param('id') id: string) {
+    return this.usersService.updateDeliveryAddress(userId, deliveryAddressData, id)
   }
 
   @ResponseMessage('Xóa địa chỉ thành công')
-  @Delete('delivery/address')
-  deleteDeliveryAddress(@CurrentUser('_id') userId: string, @Body() deliveryAddressData: DeliveryAddressDto) {
-    return this.usersService.deleteDeliveryAddress(userId, deliveryAddressData)
+  @Delete('delivery/address/:id')
+  deleteDeliveryAddress(@CurrentUser('_id') userId: string, @Param('id') id: string) {
+    return this.usersService.deleteDeliveryAddress(userId, id)
   }
 }

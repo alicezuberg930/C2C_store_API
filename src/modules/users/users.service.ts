@@ -156,49 +156,45 @@ export class UsersService {
 
   async createDeliveryAddress(userId: string, deliveryAddressData: DeliveryAddressDto) {
     try {
-      delete deliveryAddressData._id
-      return await this.userModel.findOneAndUpdate(
+      const result = await this.userModel.findOneAndUpdate(
         { _id: userId },
         { $push: { 'deliveryAddresses': deliveryAddressData } },
         { new: true },
       )
+      return result.deliveryAddresses.at(-1)
     } catch (error) {
       throw new BadRequestException(error)
     }
   }
 
-  async updateDeliveryAddress(userId: string, deliveryAddressData: DeliveryAddressDto) {
+  async updateDeliveryAddress(userId: string, deliveryAddressData: DeliveryAddressDto, id: string) {
     try {
-      deliveryAddressData._id = new Types.ObjectId(deliveryAddressData._id)
       if (deliveryAddressData.isDefault == true) {
         await this.userModel.updateOne(
           { _id: userId, 'deliveryAddresses.isDefault': true },
-          { $set: { 'deliveryAddresses.$.isDefault': false } },
+          { $set: { 'deliveryAddresses.$[].isDefault': false } },
         )
       }
       const updatedAddress = await this.userModel.findOneAndUpdate(
+        { _id: userId, 'deliveryAddresses._id': new Types.ObjectId(id) },
         {
-          _id: userId,
-          'deliveryAddresses._id': deliveryAddressData._id,
-        },
-        {
-          $set: { 'deliveryAddresses.$': deliveryAddressData },
+          $set: { 'deliveryAddresses.$': { ...deliveryAddressData, _id: new Types.ObjectId(id) } },
         },
         { new: true },
       )
       if (!updatedAddress) throw new NotFoundException('Không tìm thấy địa chỉ')
-      return updatedAddress
+      return updatedAddress.deliveryAddresses
     } catch (error) {
       throw new BadRequestException(error)
     }
   }
 
-  async deleteDeliveryAddress(userId: string, deliveryAddressData: DeliveryAddressDto) {
+  async deleteDeliveryAddress(userId: string, id: string) {
     try {
       const deletedAddress = await this.userModel.findOneAndUpdate(
         { _id: userId },
         {
-          $pull: { deliveryAddresses: { _id: deliveryAddressData._id } }
+          $pull: { deliveryAddresses: { _id: id } }
         },
         { new: true },
       )

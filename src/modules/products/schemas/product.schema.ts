@@ -3,7 +3,7 @@ import { Prop, SchemaFactory, Schema } from "@nestjs/mongoose";
 import { HydratedDocument, Schema as MongooseSchema } from "mongoose";
 import { Variation } from "./variation.schema";
 
-export type CatDocument = HydratedDocument<Product>;
+export type ProductDocument = HydratedDocument<Product>;
 
 @Schema({ timestamps: true })
 export class Product {

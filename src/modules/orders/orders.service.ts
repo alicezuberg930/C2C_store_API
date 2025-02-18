@@ -4,26 +4,27 @@ import { UpdateOrderDto } from './dto/update-order.dto'
 import axios, { isAxiosError } from 'axios'
 import crypto from 'crypto'
 import { InjectModel } from '@nestjs/mongoose'
-import { Order } from './schemas/order.schema'
+import { Order, OrderDocument } from './schemas/order.schema'
 import { Model } from 'mongoose'
 import { momoPayment } from 'src/common/utils'
 
 @Injectable()
 export class OrdersService {
-  constructor(@InjectModel(Order.name) private orderModel: Model<Order>) { }
+  constructor(@InjectModel(Order.name) private orderModel: Model<OrderDocument>) { }
 
   async create(createOrderDto: CreateOrderDto) {
-    let order = await this.orderModel.create({ ...createOrderDto })
-    if (createOrderDto.paymentMethod == "momo") {
-      const requestBody = momoPayment({ requestId: order.id, orderId: order.id, amount: createOrderDto.amount })
-      try {
-        let res = await axios({ url: `https://test-payment.momo.vn/v2/gateway/api/create`, method: "POST", timeout: 30000, data: requestBody })
-        return { order: order, payment: res.data }
-      } catch (error) {
-        if (isAxiosError(error)) {
-          if (error.response) throw new BadRequestException(error.response.data)
-          else throw new BadRequestException()
-        }
+    try {
+      let order = await this.orderModel.create({ ...createOrderDto })
+      if (createOrderDto.paymentMethod == "momo") {
+        const response = await momoPayment({ requestId: order.id, orderId: order.id, amount: createOrderDto.amount })
+        order = await this.orderModel.findByIdAndUpdate(order.id, { payUrl: response.payUrl, deeplink: response.deeplink }, { new: true })
+        return order
+      }
+    } catch (error) {
+      if (isAxiosError(error)) {
+        throw new BadRequestException(error.response.data)
+      } else {
+        throw new BadRequestException(JSON.stringify(error))
       }
     }
   }
@@ -42,6 +43,6 @@ export class OrdersService {
   }
 
   remove(id: number) {
-    return `This action removes a #${id} order`
+    return this.orderModel.deleteMany()
   }
 }

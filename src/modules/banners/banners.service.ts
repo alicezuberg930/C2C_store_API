@@ -1,19 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateBannerDto } from './dto/create-banner.dto';
 import { UpdateBannerDto } from './dto/update-banner.dto';
+import { InjectModel } from '@nestjs/mongoose';
+import { Banner, BannerDocument } from './shemas/banner.schema';
+import { Model } from 'mongoose';
 
 @Injectable()
 export class BannersService {
-  create(createBannerDto: CreateBannerDto) {
-    return 'This action adds a new banner';
+  constructor(@InjectModel(Banner.name) private bannerModel: Model<BannerDocument>) { }
+
+  async create(bannerData: CreateBannerDto) {
+    try {
+      return await this.bannerModel.create({ ...bannerData })
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
   }
 
-  findAll() {
-    return `This action returns all banners`;
+  async findAll() {
+    try {
+      const banners = await this.bannerModel.find()
+      return { payload: banners }
+    } catch (error) {
+      throw new BadRequestException(error)
+    }
   }
 
   findOne(id: number) {
-    return `This action returns a #${id} banner`;
+
   }
 
   update(id: number, updateBannerDto: UpdateBannerDto) {

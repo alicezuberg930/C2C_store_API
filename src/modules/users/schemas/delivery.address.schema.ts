@@ -19,7 +19,7 @@ export class DeliveryAddress {
     ward: string
 
     @Prop()
-    address: string
+    street: string
 
     @Prop({ enum: addressTypes })
     addressType: string

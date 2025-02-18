@@ -2,15 +2,13 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { ProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectModel } from '@nestjs/mongoose';
-import { Product } from './schemas/product.schema';
+import { Product, ProductDocument } from './schemas/product.schema';
 import { Model, Types } from 'mongoose';
 import { ProductQuery } from './query/product.query';
-import { Brand } from '../brands/schemas/brand.schema';
-import { Category } from '../categories/schemas/category.schema';
 
 @Injectable()
 export class ProductsService {
-  constructor(@InjectModel(Product.name) private productModel: Model<Product>) { }
+  constructor(@InjectModel(Product.name) private productModel: Model<ProductDocument>) { }
 
   async create(productData: ProductDto) {
     try {

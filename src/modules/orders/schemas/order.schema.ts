@@ -1,7 +1,7 @@
 import { Prop, SchemaFactory, Schema } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
 
-export type CatDocument = HydratedDocument<Order>;
+export type OrderDocument = HydratedDocument<Order>;
 
 @Schema({ timestamps: true })
 export class Order {
@@ -11,7 +11,11 @@ export class Order {
     @Prop()
     paymentMethod: string
 
-    
+    @Prop()
+    payUrl: string
+
+    @Prop()
+    deeplink: string
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);

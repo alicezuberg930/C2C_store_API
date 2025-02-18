@@ -7,7 +7,6 @@ export class DeliveryAddressDto {
     contactName: string
 
     @Matches(/^0\d{9}$/, { message: 'Số điện thoại không hợp lệ' })
-    // @IsPhoneNumber('VI', { message: 'Số điện thoại không hợp lệ' })
     contactPhone: string
 
     @IsNotEmpty({ message: "Thành phố không được trống" })
@@ -20,14 +19,11 @@ export class DeliveryAddressDto {
     ward: string
 
     @IsOptional()
-    address: string
+    street: string
 
     @IsEnum(addressTypes, { message: 'Loại địa chỉ không hợp lệ' })
     addressType: string
 
     @IsOptional()
     isDefault: boolean
-
-    @IsOptional()
-    _id: Types.ObjectId
 }
