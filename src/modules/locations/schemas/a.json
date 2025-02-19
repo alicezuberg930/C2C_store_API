@@ -1,0 +1,285 @@
+{
+  "type": "province",
+  "code": "01",
+  "name": "Hà Nội",
+  "fullName": "Thành phố Hà Nội",
+  "codeName": "ha_noi",
+  "district": [
+    {
+      "type": "district",
+      "code": "279",
+      "name": "Thường Tín",
+      "fullName": "Huyện Thường Tín",
+      "codeName": "thuong_tin",
+      "provinceCode": "01",
+      "ward": [
+        {
+          "type": "ward",
+          "code": "10204",
+          "name": "Hiền Giang",
+          "fullName": "Xã Hiền Giang",
+          "codeName": "hien_giang",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10207",
+          "name": "Hồng Vân",
+          "fullName": "Xã Hồng Vân",
+          "codeName": "hong_van",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10210",
+          "name": "Vân Tảo",
+          "fullName": "Xã Vân Tảo",
+          "codeName": "van_tao",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10213",
+          "name": "Liên Phương",
+          "fullName": "Xã Liên Phương",
+          "codeName": "lien_phuong",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10216",
+          "name": "Văn Phú",
+          "fullName": "Xã Văn Phú",
+          "codeName": "van_phu",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10219",
+          "name": "Tự Nhiên",
+          "fullName": "Xã Tự Nhiên",
+          "codeName": "tu_nhien",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10222",
+          "name": "Tiền Phong",
+          "fullName": "Xã Tiền Phong",
+          "codeName": "tien_phong",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10225",
+          "name": "Hà Hồi",
+          "fullName": "Xã Hà Hồi",
+          "codeName": "ha_hoi",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10231",
+          "name": "Nguyễn Trãi",
+          "fullName": "Xã Nguyễn Trãi",
+          "codeName": "nguyen_trai",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10234",
+          "name": "Quất Động",
+          "fullName": "Xã Quất Động",
+          "codeName": "quat_dong",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10237",
+          "name": "Chương Dương",
+          "fullName": "Xã Chương Dương",
+          "codeName": "chuong_duong",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10240",
+          "name": "Tân Minh",
+          "fullName": "Xã Tân Minh",
+          "codeName": "tan_minh",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10243",
+          "name": "Lê Lợi",
+          "fullName": "Xã Lê Lợi",
+          "codeName": "le_loi",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10246",
+          "name": "Thắng Lợi",
+          "fullName": "Xã Thắng Lợi",
+          "codeName": "thang_loi",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10249",
+          "name": "Dũng Tiến",
+          "fullName": "Xã Dũng Tiến",
+          "codeName": "dung_tien",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10255",
+          "name": "Nghiêm Xuyên",
+          "fullName": "Xã Nghiêm Xuyên",
+          "codeName": "nghiem_xuyen",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10258",
+          "name": "Tô Hiệu",
+          "fullName": "Xã Tô Hiệu",
+          "codeName": "to_hieu",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10261",
+          "name": "Văn Tự",
+          "fullName": "Xã Văn Tự",
+          "codeName": "van_tu",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10264",
+          "name": "Vạn Nhất",
+          "fullName": "Xã Vạn Nhất",
+          "codeName": "van_nhat",
+          "districtCode": "279"
+        },
+        {
+          "type": "ward",
+          "code": "10267",
+          "name": "Minh Cường",
+          "fullName": "Xã Minh Cường",
+          "codeName": "minh_cuong",
+          "districtCode": "279"
+        }
+      ]
+    },
+    {
+      "type": "district",
+      "code": "280",
+      "name": "Phú Xuyên",
+      "fullName": "Huyện Phú Xuyên",
+      "codeName": "phu_xuyen",
+      "provinceCode": "01",
+      "ward": [
+        {
+          "type": "ward",
+          "code": "10318",
+          "name": "Quang Hà",
+          "fullName": "Xã Quang Hà",
+          "codeName": "quang_ha",
+          "districtCode": "280"
+        },
+        {
+          "type": "ward",
+          "code": "10321",
+          "name": "Chuyên Mỹ",
+          "fullName": "Xã Chuyên Mỹ",
+          "codeName": "chuyen_my",
+          "districtCode": "280"
+        },
+        {
+          "type": "ward",
+          "code": "10324",
+          "name": "Khai Thái",
+          "fullName": "Xã Khai Thái",
+          "codeName": "khai_thai",
+          "districtCode": "280"
+        },
+        {
+          "type": "ward",
+          "code": "10327",
+          "name": "Phúc Tiến",
+          "fullName": "Xã Phúc Tiến",
+          "codeName": "phuc_tien",
+          "districtCode": "280"
+        },
+        {
+          "type": "ward",
+          "code": "10330",
+          "name": "Vân Từ",
+          "fullName": "Xã Vân Từ",
+          "codeName": "van_tu",
+          "districtCode": "280"
+        },
+        {
+          "type": "ward",
+          "code": "10333",
+          "name": "Tri Thủy",
+          "fullName": "Xã Tri Thủy",
+          "codeName": "tri_thuy",
+          "districtCode": "280"
+        },
+        {
+          "type": "ward",
+          "code": "10336",
+          "name": "Đại Xuyên",
+          "fullName": "Xã Đại Xuyên",
+          "codeName": "dai_xuyen",
+          "districtCode": "280"
+        },
+        {
+          "type": "ward",
+          "code": "10339",
+          "name": "Phú Yên",
+          "fullName": "Xã Phú Yên",
+          "codeName": "phu_yen",
+          "districtCode": "280"
+        },
+        {
+          "type": "ward",
+          "code": "10342",
+          "name": "Bạch Hạ",
+          "fullName": "Xã Bạch Hạ",
+          "codeName": "bach_ha",
+          "districtCode": "280"
+        },
+        {
+          "type": "ward",
+          "code": "10345",
+          "name": "Quang Lãng",
+          "fullName": "Xã Quang Lãng",
+          "codeName": "quang_lang",
+          "districtCode": "280"
+        },
+        {
+          "type": "ward",
+          "code": "10348",
+          "name": "Châu Can",
+          "fullName": "Xã Châu Can",
+          "codeName": "chau_can",
+          "districtCode": "280"
+        },
+        {
+          "type": "ward",
+          "code": "10351",
+          "name": "Minh Tân",
+          "fullName": "Xã Minh Tân",
+          "codeName": "minh_tan",
+          "districtCode": "280"
+        }
+      ]
+    }
+  ]
+}

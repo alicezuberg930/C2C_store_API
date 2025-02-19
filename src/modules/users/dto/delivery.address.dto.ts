@@ -27,3 +27,4 @@ export class DeliveryAddressDto {
     @IsOptional()
     isDefault: boolean
 }
+
