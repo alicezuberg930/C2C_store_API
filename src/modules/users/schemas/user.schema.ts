@@ -4,7 +4,7 @@ import { HydratedDocument } from 'mongoose'
 import { Wallet } from './wallet.schema'
 import { DeliveryAddress } from './delivery.address.schema'
 
-export type CatDocument = HydratedDocument<User>
+export type UserDocument = HydratedDocument<User>
 
 @Schema({ timestamps: true })
 export class User {

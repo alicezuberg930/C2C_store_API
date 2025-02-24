@@ -19,8 +19,8 @@ import { ProductsModule } from './modules/products/products.module';
 import { CategoriesModule } from './modules/categories/categories.module';
 import { BrandsModule } from './modules/brands/brands.module';
 import { BannersModule } from './modules/banners/banners.module';
-import { ProvincesModule } from './modules/provinces/provinces.module';
 import { LocationsModule } from './modules/locations/locations.module';
+import { FileModule } from './modules/file/file.module';
 
 @Module({
   imports: [
@@ -34,6 +34,8 @@ import { LocationsModule } from './modules/locations/locations.module';
     CategoriesModule,
     BrandsModule,
     LocationsModule,
+    FileModule,
+    BannersModule,
     // Env config module
     ConfigModule.forRoot({ isGlobal: true }),
     // Mongodb config mondule
@@ -70,7 +72,6 @@ import { LocationsModule } from './modules/locations/locations.module';
       }),
       inject: [ConfigService],
     }),
-    BannersModule,
   ],
   controllers: [AppController],
   providers: [

@@ -2,6 +2,25 @@ import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { HydratedDocument } from "mongoose";
 
 export type LocationDocument = HydratedDocument<Location>
+class Ward {
+    @Prop()
+    type: string
+
+    @Prop()
+    codeName: string
+
+    @Prop()
+    code: string
+
+    @Prop()
+    name: string
+
+    @Prop()
+    fullName: string
+
+    @Prop()
+    districtCode: string
+}
 
 class District {
     @Prop()
@@ -21,6 +40,9 @@ class District {
 
     @Prop()
     provinceCode: string
+
+    @Prop({ type: [Ward] })
+    ward: Ward[]
 }
 
 @Schema({ timestamps: true })

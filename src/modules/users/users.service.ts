@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common'
 import { CreateUserDto } from './dto/create-user.dto'
 import { UpdateUserDto } from './dto/update-user.dto'
-import { User } from './schemas/user.schema'
+import { User, UserDocument } from './schemas/user.schema'
 import mongoose, { Model, Types } from 'mongoose'
 import { InjectModel } from '@nestjs/mongoose'
 import { hashPassword } from 'src/common/utils'
@@ -12,10 +12,15 @@ import { MailerService } from '@nestjs-modules/mailer'
 import { VerifyDto } from '../auth/dto/verify-auth.dto'
 import { UserQuery } from './query/user.query'
 import { DeliveryAddressDto } from './dto/delivery.address.dto'
+import { Location, LocationDocument } from '../locations/schemas/location.schemas'
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>, private mailerService: MailerService) { }
+  constructor(
+    @InjectModel(User.name) private userModel: Model<UserDocument>,
+    private mailerService: MailerService,
+    @InjectModel(Location.name) private locationModel: Model<LocationDocument>
+  ) { }
 
   async isEmailExist(email: string): Promise<boolean> {
     const isExist = await this.userModel.exists({ email })
@@ -148,6 +153,14 @@ export class UsersService {
     try {
       let user = await this.userModel.findById({ _id: userId })
       if (!user) throw new NotFoundException('Người dùng không tồn tại')
+      for (let i = 0; i < user.deliveryAddresses.length; i++) {
+        let city = await this.locationModel.findOne({ code: user.deliveryAddresses[i].city })
+        let district = city.district.find(item => item.code === user.deliveryAddresses[i].district)
+        let ward = district.ward.find(item => item.code === user.deliveryAddresses[i].ward)
+        user.deliveryAddresses[i].city = city.fullName
+        user.deliveryAddresses[i].district = district.fullName
+        user.deliveryAddresses[i].ward = ward.fullName
+      }
       return user.deliveryAddresses
     } catch (error) {
       throw new BadRequestException(error)
@@ -156,6 +169,12 @@ export class UsersService {
 
   async createDeliveryAddress(userId: string, deliveryAddressData: DeliveryAddressDto) {
     try {
+      if (deliveryAddressData.isDefault == true) {
+        await this.userModel.updateOne(
+          { _id: userId, 'deliveryAddresses.isDefault': true },
+          { $set: { 'deliveryAddresses.$[].isDefault': false } },
+        )
+      }
       const result = await this.userModel.findOneAndUpdate(
         { _id: userId },
         { $push: { 'deliveryAddresses': deliveryAddressData } },
@@ -177,9 +196,7 @@ export class UsersService {
       }
       const updatedAddress = await this.userModel.findOneAndUpdate(
         { _id: userId, 'deliveryAddresses._id': new Types.ObjectId(id) },
-        {
-          $set: { 'deliveryAddresses.$': { ...deliveryAddressData, _id: new Types.ObjectId(id) } },
-        },
+        { $set: { 'deliveryAddresses.$': { ...deliveryAddressData, _id: new Types.ObjectId(id) } } },
         { new: true },
       )
       if (!updatedAddress) throw new NotFoundException('Không tìm thấy địa chỉ')

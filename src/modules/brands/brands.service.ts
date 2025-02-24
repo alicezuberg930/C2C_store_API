@@ -29,7 +29,7 @@ export class BrandsService {
 
   async findAll() {
     try {
-      return await this.brandModel.aggregate([
+      const brands = await this.brandModel.aggregate([
         // { $match: { _id: _id } }, // Match the specific brand
         {
           $lookup: {
@@ -40,6 +40,7 @@ export class BrandsService {
           },
         },
       ])
+      return { payload: brands }
     } catch (error) {
       throw new BadRequestException(error)
     }

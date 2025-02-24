@@ -7,7 +7,6 @@ import { MailerService } from '@nestjs-modules/mailer';
 import { VerifyDto } from './dto/verify-auth.dto';
 import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
 import { FileSizeValidationPipe } from 'src/common/file.validator';
-import * as fs from 'fs';
 
 @Controller('auth')
 export class AuthController {
@@ -19,35 +18,6 @@ export class AuthController {
   @ResponseMessage("Đăng nhập thành công")
   login(@Request() request: any) {
     return this.authService.login(request.user)
-  }
-
-  @Post('upload')
-  @UseInterceptors(FilesInterceptor('images'))
-  async uploadFile(@UploadedFiles() files: Array<Express.Multer.File>) {
-    // console.log(files);
-    // return {
-    //   message: 'Files uploaded successfully',
-    //   files: files.map((file) => ({
-    //     originalName: file.originalname,
-    //     filename: file.filename,
-    //     path: file.path,
-    //   })),
-    // };
-    let a = [];
-    for (let i = 0; i < files.length; i++) {
-      let cloud = await this.authService.uploadImage(files[i].path)
-      console.log(cloud);
-      a.push(cloud.secure_url)
-      fs.unlink(files[i].path, (err) => {
-        if (err) {
-          console.error(`Error deleting file ${files[i].path}: ${err.message}`);
-        } else {
-          console.log(`File deleted: ${files[i].path}`);
-        }
-      });
-
-    }
-    return { urls: a }
   }
 
   @Public()
